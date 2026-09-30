@@ -21,3 +21,19 @@ steps:
     publishJUnitResults: true
     testResultsFiles: '**/surefire-reports/TEST-*.xml'
     goals: 'clean package'
+
+    # 2. Copy JAR to staging directory
+- task: CopyFiles@2
+  displayName: 'Copy JAR File'
+  inputs:
+    SourceFolder: '$(System.DefaultWorkingDirectory)'
+    Contents: 'target/*.jar'
+    TargetFolder: '$(Build.ArtifactStagingDirectory)'
+
+# 3. Publish Artifact
+- task: PublishBuildArtifacts@1
+  displayName: 'Publish Build Artifact'
+  inputs:
+    PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+    ArtifactName: 'simple-app'
+    publishLocation: 'Container'
